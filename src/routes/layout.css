@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+@plugin '@tailwindcss/forms' {
+  strategy: 'class';
+}
+@plugin 'daisyui' {
+  themes:
+    corporate --default,
+    dark --prefersdark;
+}
+@plugin '@iconify/tailwind4' {
+  scale: 2;
+}
+
+@source inline('btn-{info,success,warning,error}');
+@source inline('alert-{info,success,warning,error}');
