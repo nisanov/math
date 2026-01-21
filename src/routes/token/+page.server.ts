@@ -1,25 +1,66 @@
 import { fail } from '@sveltejs/kit';
-import { message } from 'sveltekit-superforms';
+import { eq } from 'drizzle-orm';
 import type { Actions } from './$types';
-import { AuthSchema } from '$lib/schemas';
-import { superValidate } from 'sveltekit-superforms';
+import { AuthSchema, RevokeSchema } from '$lib/schemas';
+import { message, superValidate } from 'sveltekit-superforms';
 import { valibot } from 'sveltekit-superforms/adapters';
+import { db } from '$lib/server/db';
+import { user } from '$lib/server/db/schema';
+import { generateToken } from '$lib/server/auth/jwt';
 
 export const actions = {
-  authenticate: async ({ request }) => {
+  authenticate: async ({ request, cookies }) => {
     const form = await superValidate(request, valibot(AuthSchema));
     if (!form.valid) {
       return fail(422, { form });
     }
 
-    // get a user from the database
-    // create a user if the user does not exist
-    // return the user's authentication token if it is valid
-    // generate a new authentication token if one does not exist
+    let authedUser = await db.query.user.findFirst({
+      where: eq(user.username, form.data.username)
+    });
 
-    return message(form, 'Successfully Generated Authentication Token');
+    if (!authedUser) {
+      const [created] = await db.insert(user).values({ username: form.data.username }).returning();
+      authedUser = created;
+    }
+
+    authedUser.token = await generateToken();
+
+    await db.update(user).set({ token: authedUser.token }).where(eq(user.id, authedUser.id));
+
+    const userCookie = {
+      visited: authedUser.createdAt.toString() !== authedUser.updatedAt.toString(),
+      ...authedUser
+    };
+
+    cookies.set('user', JSON.stringify(userCookie), { path: '/', sameSite: 'strict' });
+
+    return message(form, {
+      type: 'success',
+      content: 'Successfully Generated Authentication Token'
+    });
   },
-  revoke: async (event) => {
-    console.log(event);
+  revoke: async ({ cookies }) => {
+    const form = await superValidate(valibot(RevokeSchema));
+    const userCookie = cookies.get('user');
+
+    if (userCookie) {
+      const authedUser = JSON.parse(userCookie);
+
+      await db
+        .update(user)
+        .set({
+          token: null,
+          updatedAt: new Date()
+        })
+        .where(eq(user.id, authedUser.id));
+    }
+
+    cookies.delete('user', { path: '/', sameSite: 'strict' });
+
+    return message(form, {
+      type: 'warning',
+      content: 'Successfully Revoked Authentication Token'
+    });
   }
 } satisfies Actions;

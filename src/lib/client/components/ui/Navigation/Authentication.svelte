@@ -6,18 +6,31 @@
   import { toasts } from '$lib/client/state/toasts.svelte';
   import { AuthSchema } from '$lib/schemas';
   import { valibotClient } from 'sveltekit-superforms/adapters';
+  import { invalidateAll } from '$app/navigation';
 
-  const { form, errors, enhance } = superForm(page.data.form.authentication, {
+  const {
+    form: authenticationForm,
+    errors: authenticationErrors,
+    enhance: authenticationEnhance
+  } = superForm(page.data.form.authentication, {
     validators: valibotClient(AuthSchema),
-    onUpdated({ form }) {
+    onUpdated: async ({ form }) => {
       toasts.form(form);
+      await invalidateAll();
+    }
+  });
+
+  const { enhance: revokeEnhance } = superForm(page.data.form.revoke, {
+    onUpdated: async ({ form }) => {
+      toasts.form(form);
+      await invalidateAll();
     }
   });
 
   let username: HTMLInputElement;
 
   onMount(() => {
-    if (!page.data.token) {
+    if (!page.data.user) {
       username.focus();
     }
   });
@@ -25,7 +38,7 @@
   function onShortcut(detail: ShortcutEventDetail) {
     const keyboardEvent = detail.originalEvent;
     keyboardEvent.preventDefault();
-    if (page.data.token || keyboardEvent.target === username) {
+    if (page.data.user || keyboardEvent.target === username) {
       return;
     }
     username.focus();
@@ -42,27 +55,31 @@
   }}
 />
 
-{#if page.data.token}
-  <form>
+{#if page.data.user}
+  <form method="POST" action="/token?/revoke" use:revokeEnhance>
     <div class="flex gap-x-5">
+      <span class="prose prose-xl">
+        {#if page.data.user.visited}
+          Welcome Back, {page.data.user.username}!
+        {:else}
+          Welcome, {page.data.user.username}!
+        {/if}
+      </span>
       <button class="btn btn-neutral" type="submit" title="Logout">
         <span class="icon-[carbon--logout]"></span>
       </button>
-      <span class="prose prose-xl">
-        Welcome back, {page.data.user?.name}!
-      </span>
     </div>
   </form>
 {:else}
-  <form method="POST" action="/token?/authenticate" use:enhance>
+  <form method="POST" action="/token?/authenticate" use:authenticationEnhance>
     <div class="join">
       <label class="validator input join-item">
         <span class="icon-[mdi-light--account]"></span>
         <input
           name="username"
           bind:this={username}
-          bind:value={$form['username']}
-          aria-invalid={$errors['username'] ? 'true' : undefined}
+          bind:value={$authenticationForm['username']}
+          aria-invalid={$authenticationErrors['username'] ? 'true' : undefined}
           autocomplete="off"
         />
         <kbd class="kbd kbd-sm">⌘</kbd><kbd class="kbd kbd-sm">L</kbd>

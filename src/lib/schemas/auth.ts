@@ -8,4 +8,6 @@ export const AuthSchema = v.object({
   )
 });
 
+export const RevokeSchema = v.object({});
+
 export type LoginInput = v.InferInput<typeof AuthSchema>;

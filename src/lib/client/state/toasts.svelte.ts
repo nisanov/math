@@ -1,14 +1,13 @@
 import type { SuperValidated } from 'sveltekit-superforms';
-import type { SuperFormData } from 'sveltekit-superforms/client';
 
-type ToastType = 'info' | 'success' | 'warning' | 'error';
+export type ToastType = 'info' | 'success' | 'warning' | 'error';
 
-type ToastMessage = {
+export type ToastMessage = {
   type: ToastType;
   content: string;
 };
 
-type Toast = {
+export type Toast = {
   id: string;
   message: ToastMessage;
 };
@@ -24,29 +23,26 @@ class Toasts {
   values: Toast[] = $state([]);
   ids: Map<string, NodeJS.Timeout> = $state(new Map<string, NodeJS.Timeout>());
 
-  public success(content: string): void {
-    this.show({ type: 'success', content });
-  }
-
   public error(content: string): void {
     this.show({ type: 'error', content });
   }
 
-  public form(form: SuperValidated<Record<string, unknown>, string | undefined>): void {
+  public form(
+    form: SuperValidated<Record<string, unknown>, App.Superforms.Message | undefined>
+  ): void {
     if (!form.valid) {
       for (const field in form.errors) {
-        const messages = form.errors[field as keyof typeof form.errors];
+        const messages = form.errors[field];
         if (Array.isArray(messages)) {
           for (const message of messages) {
             toasts.error(message);
-            break;
           }
         }
       }
     }
 
     if (form.message) {
-      toasts.success(form.message);
+      toasts.show(form.message);
     }
   }
 
