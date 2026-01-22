@@ -5,8 +5,20 @@
   import { page } from '$app/state';
   import type { LayoutProps } from './$types';
   import Navigation from '$lib/client/components/ui/Navigation.svelte';
+  import { getFlash } from 'sveltekit-flash-message';
+  import { toasts } from '$lib/client/state/toasts.svelte';
 
   let { children }: LayoutProps = $props();
+
+  const flash = getFlash(page);
+
+  $effect(() => {
+    if (!$flash) return;
+
+    toasts.show($flash);
+
+    $flash = undefined;
+  });
 </script>
 
 <svelte:head>

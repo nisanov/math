@@ -1,11 +1,12 @@
 import { fail } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import type { Actions } from './$types';
-import { LoginSchema, LogoutSchema } from '$lib/schemas';
-import { message, superValidate } from 'sveltekit-superforms';
+import { LoginSchema } from '$lib/schemas';
+import { superValidate } from 'sveltekit-superforms';
 import { valibot } from 'sveltekit-superforms/adapters';
 import { db } from '$lib/server/db';
 import { user } from '$lib/server/db/schema';
+import { setFlash } from 'sveltekit-flash-message/server';
 
 export const actions = {
   login: async ({ request, cookies }) => {
@@ -25,31 +26,26 @@ export const actions = {
 
     cookies.set('user', JSON.stringify(authedUser), { path: '/', sameSite: 'strict' });
 
-    return message(form, {
-      type: 'success',
-      content: 'Successfully Logged In'
-    });
+    setFlash(
+      { type: 'success', content: `Successfully logged you in, ${authedUser.username}.` },
+      cookies
+    );
   },
   logout: async ({ cookies }) => {
-    const form = await superValidate(valibot(LogoutSchema));
-    const userCookie = cookies.get('user');
+    const authedUser = JSON.parse(<string>cookies.get('user'));
 
-    if (userCookie) {
-      const authedUser = JSON.parse(userCookie);
-
-      await db
-        .update(user)
-        .set({
-          updatedAt: new Date()
-        })
-        .where(eq(user.id, authedUser.id));
-    }
+    await db
+      .update(user)
+      .set({
+        updatedAt: new Date()
+      })
+      .where(eq(user.id, authedUser.id));
 
     cookies.delete('user', { path: '/', sameSite: 'strict' });
 
-    return message(form, {
-      type: 'warning',
-      content: 'Successfully Logged Out'
-    });
+    setFlash(
+      { type: 'warning', content: `Successfully logged you out, ${authedUser.username}.` },
+      cookies
+    );
   }
 } satisfies Actions;
