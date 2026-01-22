@@ -13,7 +13,8 @@ declare global {
       user?: {
         id: string;
         username: string;
-        token: string;
+        createdAt: string;
+        updatedAt: string;
       };
     }
     // interface Platform {}

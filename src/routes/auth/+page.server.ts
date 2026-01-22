@@ -1,16 +1,15 @@
 import { fail } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import type { Actions } from './$types';
-import { AuthSchema, RevokeSchema } from '$lib/schemas';
+import { LoginSchema, LogoutSchema } from '$lib/schemas';
 import { message, superValidate } from 'sveltekit-superforms';
 import { valibot } from 'sveltekit-superforms/adapters';
 import { db } from '$lib/server/db';
 import { user } from '$lib/server/db/schema';
-import { generateToken } from '$lib/server/auth/jwt';
 
 export const actions = {
-  authenticate: async ({ request, cookies }) => {
-    const form = await superValidate(request, valibot(AuthSchema));
+  login: async ({ request, cookies }) => {
+    const form = await superValidate(request, valibot(LoginSchema));
     if (!form.valid) {
       return fail(422, { form });
     }
@@ -24,24 +23,15 @@ export const actions = {
       authedUser = created;
     }
 
-    authedUser.token = await generateToken();
-
-    await db.update(user).set({ token: authedUser.token }).where(eq(user.id, authedUser.id));
-
-    const userCookie = {
-      visited: authedUser.createdAt.toString() !== authedUser.updatedAt.toString(),
-      ...authedUser
-    };
-
-    cookies.set('user', JSON.stringify(userCookie), { path: '/', sameSite: 'strict' });
+    cookies.set('user', JSON.stringify(authedUser), { path: '/', sameSite: 'strict' });
 
     return message(form, {
       type: 'success',
-      content: 'Successfully Generated Authentication Token'
+      content: 'Successfully Logged In'
     });
   },
-  revoke: async ({ cookies }) => {
-    const form = await superValidate(valibot(RevokeSchema));
+  logout: async ({ cookies }) => {
+    const form = await superValidate(valibot(LogoutSchema));
     const userCookie = cookies.get('user');
 
     if (userCookie) {
@@ -50,7 +40,6 @@ export const actions = {
       await db
         .update(user)
         .set({
-          token: null,
           updatedAt: new Date()
         })
         .where(eq(user.id, authedUser.id));
@@ -60,7 +49,7 @@ export const actions = {
 
     return message(form, {
       type: 'warning',
-      content: 'Successfully Revoked Authentication Token'
+      content: 'Successfully Logged Out'
     });
   }
 } satisfies Actions;

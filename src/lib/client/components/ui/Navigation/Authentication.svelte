@@ -4,23 +4,23 @@
   import { shortcut, type ShortcutEventDetail } from '@svelte-put/shortcut';
   import { page } from '$app/state';
   import { toasts } from '$lib/client/state/toasts.svelte';
-  import { AuthSchema } from '$lib/schemas';
+  import { LoginSchema } from '$lib/schemas';
   import { valibotClient } from 'sveltekit-superforms/adapters';
   import { invalidateAll } from '$app/navigation';
 
   const {
-    form: authenticationForm,
-    errors: authenticationErrors,
-    enhance: authenticationEnhance
-  } = superForm(page.data.form.authentication, {
-    validators: valibotClient(AuthSchema),
+    form: loginForm,
+    errors: loginErrors,
+    enhance: loginEnhance
+  } = superForm(page.data.form.login, {
+    validators: valibotClient(LoginSchema),
     onUpdated: async ({ form }) => {
       toasts.form(form);
       await invalidateAll();
     }
   });
 
-  const { enhance: revokeEnhance } = superForm(page.data.form.revoke, {
+  const { enhance: logoutEnhance } = superForm(page.data.form.logout, {
     onUpdated: async ({ form }) => {
       toasts.form(form);
       await invalidateAll();
@@ -56,10 +56,10 @@
 />
 
 {#if page.data.user}
-  <form method="POST" action="/token?/revoke" use:revokeEnhance>
+  <form method="POST" action="/auth?/logout" use:logoutEnhance>
     <div class="flex gap-x-5">
       <span class="prose prose-xl">
-        {#if page.data.user.visited}
+        {#if page.data.user.createdAt !== page.data.user.updatedAt}
           Welcome Back, {page.data.user.username}!
         {:else}
           Welcome, {page.data.user.username}!
@@ -71,15 +71,15 @@
     </div>
   </form>
 {:else}
-  <form method="POST" action="/token?/authenticate" use:authenticationEnhance>
+  <form method="POST" action="/auth?/login" use:loginEnhance>
     <div class="join">
       <label class="validator input join-item">
         <span class="icon-[mdi-light--account]"></span>
         <input
           name="username"
           bind:this={username}
-          bind:value={$authenticationForm['username']}
-          aria-invalid={$authenticationErrors['username'] ? 'true' : undefined}
+          bind:value={$loginForm['username']}
+          aria-invalid={$loginErrors['username'] ? 'true' : undefined}
           autocomplete="off"
         />
         <kbd class="kbd kbd-sm">⌘</kbd><kbd class="kbd kbd-sm">L</kbd>

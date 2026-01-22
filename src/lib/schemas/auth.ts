@@ -1,6 +1,6 @@
 import * as v from 'valibot';
 
-export const AuthSchema = v.object({
+export const LoginSchema = v.object({
   username: v.pipe(
     v.string(),
     v.nonEmpty('Username is required'),
@@ -8,6 +8,4 @@ export const AuthSchema = v.object({
   )
 });
 
-export const RevokeSchema = v.object({});
-
-export type LoginInput = v.InferInput<typeof AuthSchema>;
+export const LogoutSchema = v.object({});
