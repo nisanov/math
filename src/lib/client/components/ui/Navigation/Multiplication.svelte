@@ -46,7 +46,12 @@
       {/each}
     </ul>
   </div>
-  <button class="btn m-1 btn-accent" title="launch" disabled={selected.length === 0} onclick={launch}>
+  <button
+    class="btn m-1 btn-accent"
+    title="launch"
+    disabled={selected.length === 0}
+    onclick={launch}
+  >
     <span class="icon-[carbon--rocket]"></span>
   </button>
 </div>

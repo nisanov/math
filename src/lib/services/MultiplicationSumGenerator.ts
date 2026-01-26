@@ -11,9 +11,7 @@ export class MultiplicationGenerator {
 
   constructor(bitmask: number) {
     // Extract selected tables from bitmask (1-12)
-    this.tables = Array.from({ length: 12 }, (_, i) => i + 1).filter(
-      (_, i) => bitmask & (1 << i)
-    );
+    this.tables = Array.from({ length: 12 }, (_, i) => i + 1).filter((_, i) => bitmask & (1 << i));
   }
 
   generate(): MultiplicationSum[] {
