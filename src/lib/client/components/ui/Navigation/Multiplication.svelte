@@ -1,19 +1,28 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { MultiplicationGenerator } from '$lib/services/MultiplicationSumGenerator';
 
   let selected = $state<number[]>([]);
+  let bitmask = $state(0);
 
   onMount(() => {
     const stored = localStorage.getItem('multiplication');
     if (stored) {
-      const bitmask = parseInt(stored, 10);
+      bitmask = parseInt(stored, 10);
       selected = Array.from({ length: 12 }, (_, i) => 1 << i).filter((val) => bitmask & val);
     }
   });
 
   function onTimesTableChanged() {
-    const bitmask = selected.reduce((acc, val) => acc | val, 0);
+    bitmask = selected.reduce((acc, val) => acc | val, 0);
     localStorage.setItem('multiplication', String(bitmask));
+  }
+
+  function launch() {
+    const generator = new MultiplicationGenerator(bitmask); // Tables 1 and 3
+    const sums = generator.generate();
+
+    console.log(sums);
   }
 </script>
 
@@ -37,7 +46,7 @@
       {/each}
     </ul>
   </div>
-  <button class="btn m-1 btn-accent" title="launch">
+  <button class="btn m-1 btn-accent" title="launch" disabled={selected.length === 0} onclick={launch}>
     <span class="icon-[carbon--rocket]"></span>
   </button>
 </div>
