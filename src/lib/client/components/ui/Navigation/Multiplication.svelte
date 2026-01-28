@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { MultiplicationGenerator } from '$lib/services/MultiplicationSumGenerator';
+  import { sums } from '$lib/client/state/sums.svelte';
 
   let selected = $state<number[]>([]);
   let bitmask = $state(0);
@@ -20,9 +21,7 @@
 
   function launch() {
     const generator = new MultiplicationGenerator(bitmask); // Tables 1 and 3
-    const sums = generator.generate();
-
-    console.log(sums);
+    sums.items = generator.generate();
   }
 </script>
 

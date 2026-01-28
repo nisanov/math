@@ -5,7 +5,7 @@ export interface MultiplicationSum {
 }
 
 export class MultiplicationGenerator {
-  static readonly SUM_COUNT = 12;
+  static readonly SUM_COUNT = 20;
 
   private readonly tables: number[] = [];
 
