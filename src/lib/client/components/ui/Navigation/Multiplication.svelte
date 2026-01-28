@@ -22,6 +22,7 @@
   function launch() {
     const generator = new MultiplicationGenerator(bitmask); // Tables 1 and 3
     sums.items = generator.generate();
+    sums.onLaunch?.();
   }
 </script>
 
