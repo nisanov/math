@@ -2,15 +2,15 @@ export interface MultiplicationSum {
   multiplicand: number;
   multiplier: number;
   answer: number;
+  answered: boolean | null;
 }
 
 export class MultiplicationGenerator {
-  static readonly SUM_COUNT = 20;
+  static readonly SUM_COUNT = 5;
 
   private readonly tables: number[] = [];
 
   constructor(bitmask: number) {
-    // Extract selected tables from bitmask (1-12)
     this.tables = Array.from({ length: 12 }, (_, i) => i + 1).filter((_, i) => bitmask & (1 << i));
   }
 
@@ -28,7 +28,8 @@ export class MultiplicationGenerator {
       sums.push({
         multiplicand,
         multiplier,
-        answer: multiplicand * multiplier
+        answer: multiplicand * multiplier,
+        answered: null
       });
     }
 

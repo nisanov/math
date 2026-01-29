@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from '$app/state';
   import { onMount } from 'svelte';
   import { MultiplicationGenerator } from '$lib/services/MultiplicationSumGenerator';
   import { sums } from '$lib/client/state/sums.svelte';
@@ -22,11 +23,13 @@
   function launch() {
     const generator = new MultiplicationGenerator(bitmask); // Tables 1 and 3
     sums.items = generator.generate();
+    sums.bitmask = bitmask;
     sums.onLaunch?.();
+    sums.onTimerStart?.();
   }
 </script>
 
-<div class="flex grow justify-start px-2">
+<div>
   <div class="dropdown">
     <div tabindex="0" role="button" class="btn m-1 btn-primary">Multiplication</div>
     <ul tabindex="-1" class="dropdown-content menu z-1 w-52 rounded-box bg-base-100 p-2 shadow-sm">
@@ -46,12 +49,7 @@
       {/each}
     </ul>
   </div>
-  <button
-    class="btn m-1 btn-accent"
-    title="launch"
-    disabled={selected.length === 0}
-    onclick={launch}
-  >
+  <button class="btn btn-accent" title="launch" disabled={selected.length === 0 || !page.data.user} onclick={launch}>
     <span class="icon-[carbon--rocket]"></span>
   </button>
 </div>

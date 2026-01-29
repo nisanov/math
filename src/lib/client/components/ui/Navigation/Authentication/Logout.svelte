@@ -1,12 +1,17 @@
 <script lang="ts">
   import { page } from '$app/state';
   import { superForm } from 'sveltekit-superforms';
+  import { resetSums } from '$lib/client/state/sums.svelte';
 
-  const { enhance: enhance } = superForm(page.data.form.logout);
+  const { enhance } = superForm(page.data.form.logout, {
+    onResult: () => {
+      resetSums();
+    }
+  });
 </script>
 
 <form method="POST" action="/auth?/logout" use:enhance>
-  <div class="flex gap-x-5">
+  <div class="flex items-center gap-x-5">
     <span class="prose prose-xl">
       {#if page.data.user.createdAt !== page.data.user.updatedAt}
         Welcome Back, {page.data.user.username}!
