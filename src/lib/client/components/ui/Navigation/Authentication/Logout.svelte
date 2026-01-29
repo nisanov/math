@@ -11,7 +11,7 @@
 </script>
 
 <form method="POST" action="/auth?/logout" use:enhance>
-  <div class="flex items-center gap-x-5">
+  <div class="flex items-center gap-x-4">
     <span class="prose prose-xl">
       {#if page.data.user.createdAt !== page.data.user.updatedAt}
         Welcome Back, {page.data.user.username}!

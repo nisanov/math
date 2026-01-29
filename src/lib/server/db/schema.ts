@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, timestamp, integer } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, timestamp, integer, time } from 'drizzle-orm/pg-core';
 
 export const user = pgTable('users', {
   id: uuid().defaultRandom().primaryKey(),
@@ -6,8 +6,14 @@ export const user = pgTable('users', {
   createdAt: timestamp({ precision: 6, withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp({ precision: 6, withTimezone: true }).defaultNow().notNull()
 });
-export const game = pgTable('games', {
+
+export const multiplication = pgTable('multiplications', {
   id: uuid().defaultRandom().primaryKey(),
-  name: varchar().notNull(),
-  sequence: integer().default(10)
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => user.id),
+  sequence: integer().notNull(),
+  questions: integer().notNull(),
+  correct: integer().notNull(),
+  time: time()
 });

@@ -4,6 +4,7 @@ export const sums = $state<{
   items: MultiplicationSum[];
   bitmask: number;
   elapsedTime: string;
+  isActive: boolean;
   onLaunch: (() => void) | null;
   onTimerStart: (() => void) | null;
   onTimerStop: (() => void) | null;
@@ -12,6 +13,7 @@ export const sums = $state<{
   items: [],
   bitmask: 0,
   elapsedTime: '00:00',
+  isActive: false,
   onLaunch: null,
   onTimerStart: null,
   onTimerStop: null,
@@ -22,5 +24,6 @@ export function resetSums() {
   sums.items = [];
   sums.bitmask = 0;
   sums.elapsedTime = '00:00';
+  sums.isActive = false;
   sums.onReset?.();
 }

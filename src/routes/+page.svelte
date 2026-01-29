@@ -15,7 +15,8 @@
 
   function compute(index: number) {
     if (answers[index].toString().trim() !== '') {
-      sums.items[index].answered = answers[index].toString() === sums.items[index].answer.toString();
+      sums.items[index].answered =
+        answers[index].toString() === sums.items[index].answer.toString();
       if (sums.items.every((sum) => sum.answered !== null)) {
         sums.onTimerStop?.();
 

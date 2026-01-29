@@ -45,22 +45,24 @@
   });
 </script>
 
-<div class="flex items-center gap-2">
-  <span class="countdown font-sans font-light text-orange-500 text-5xl">
-    <span
-      style="--value:{minutes}; --digits:2;"
-      aria-live="polite"
-      aria-label={String(minutes).padStart(2, '0')}
-    >
-      {minutes}
+{#if sums.isActive}
+  <div class="flex items-center gap-2">
+    <span class="countdown font-sans text-5xl font-light text-orange-500">
+      <span
+        style="--value:{minutes}; --digits:2;"
+        aria-live="polite"
+        aria-label={String(minutes).padStart(2, '0')}
+      >
+        {minutes}
+      </span>
+      :
+      <span
+        style="--value:{seconds}; --digits:2;"
+        aria-live="polite"
+        aria-label={String(seconds).padStart(2, '0')}
+      >
+        {seconds}
+      </span>
     </span>
-    :
-    <span
-      style="--value:{seconds}; --digits:2;"
-      aria-live="polite"
-      aria-label={String(seconds).padStart(2, '0')}
-    >
-      {seconds}
-    </span>
-  </span>
-</div>
+  </div>
+{/if}

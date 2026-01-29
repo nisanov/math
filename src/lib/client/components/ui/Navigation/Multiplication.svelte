@@ -2,7 +2,7 @@
   import { page } from '$app/state';
   import { onMount } from 'svelte';
   import { MultiplicationGenerator } from '$lib/services/MultiplicationSumGenerator';
-  import { sums } from '$lib/client/state/sums.svelte';
+  import { resetSums, sums } from '$lib/client/state/sums.svelte';
 
   let selected = $state<number[]>([]);
   let bitmask = $state(0);
@@ -24,12 +24,25 @@
     const generator = new MultiplicationGenerator(bitmask); // Tables 1 and 3
     sums.items = generator.generate();
     sums.bitmask = bitmask;
+    sums.isActive = true;
     sums.onLaunch?.();
     sums.onTimerStart?.();
   }
+
+  function cancel() {
+    resetSums();
+  }
 </script>
 
-<div>
+<div class="ml-5">
+  <button
+    class="btn btn-soft btn-neutral"
+    title="Erase"
+    disabled={selected.length === 0 || !page.data.user || !sums.isActive}
+    onclick={cancel}
+  >
+    <span class="icon-[oui--eraser]"></span>
+  </button>
   <div class="dropdown">
     <div tabindex="0" role="button" class="btn m-1 btn-primary">Multiplication</div>
     <ul tabindex="-1" class="dropdown-content menu z-1 w-52 rounded-box bg-base-100 p-2 shadow-sm">
@@ -49,7 +62,12 @@
       {/each}
     </ul>
   </div>
-  <button class="btn btn-accent" title="launch" disabled={selected.length === 0 || !page.data.user} onclick={launch}>
+  <button
+    class="btn btn-accent"
+    title="launch"
+    disabled={selected.length === 0 || !page.data.user}
+    onclick={launch}
+  >
     <span class="icon-[carbon--rocket]"></span>
   </button>
 </div>
