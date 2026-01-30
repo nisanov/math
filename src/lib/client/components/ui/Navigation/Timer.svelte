@@ -2,12 +2,14 @@
   import { onMount, onDestroy } from 'svelte';
   import { sums } from '$lib/client/state/sums.svelte';
 
+  let hours = $state(0);
   let minutes = $state(0);
   let seconds = $state(0);
   let intervalId: ReturnType<typeof setInterval> | null = null;
 
   function startTimer() {
     if (intervalId) clearInterval(intervalId);
+    hours = 0;
     minutes = 0;
     seconds = 0;
 
@@ -16,6 +18,10 @@
       if (seconds >= 60) {
         seconds = 0;
         minutes++;
+        if (minutes >= 60) {
+          minutes = 0;
+          hours++;
+        }
       }
     }, 1000);
   }
@@ -25,11 +31,12 @@
       clearInterval(intervalId);
       intervalId = null;
     }
-    sums.elapsedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    sums.elapsedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   }
 
   function resetTimer() {
     stopTimer();
+    hours = 0;
     minutes = 0;
     seconds = 0;
   }

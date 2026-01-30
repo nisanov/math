@@ -6,12 +6,12 @@ export interface MultiplicationSum {
 }
 
 export class MultiplicationGenerator {
-  static readonly SUM_COUNT = 5;
-
   private readonly tables: number[] = [];
+  private readonly questions: number;
 
-  constructor(bitmask: number) {
+  constructor(bitmask: number, questions: number) {
     this.tables = Array.from({ length: 12 }, (_, i) => i + 1).filter((_, i) => bitmask & (1 << i));
+    this.questions = questions;
   }
 
   generate(): MultiplicationSum[] {
@@ -21,7 +21,7 @@ export class MultiplicationGenerator {
 
     const sums: MultiplicationSum[] = [];
 
-    for (let i = 0; i < MultiplicationGenerator.SUM_COUNT; i++) {
+    for (let i = 0; i < this.questions; i++) {
       const multiplicand = this.tables[Math.floor(Math.random() * this.tables.length)];
       const multiplier = Math.floor(Math.random() * 12) + 1;
 

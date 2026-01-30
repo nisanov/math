@@ -2,6 +2,7 @@
   import { page } from '$app/state';
   import { sums } from '$lib/client/state/sums.svelte';
   import { onMount } from 'svelte';
+  import { toasts } from '$lib/client/state/toasts.svelte';
 
   let answers = $state<string[]>([]);
   let inputs = $state<HTMLInputElement[]>([]);
@@ -13,21 +14,25 @@
     };
   });
 
-  function compute(index: number) {
+  async function compute(index: number) {
     if (answers[index].toString().trim() !== '') {
       sums.items[index].answered =
         answers[index].toString() === sums.items[index].answer.toString();
       if (sums.items.every((sum) => sum.answered !== null)) {
         sums.onTimerStop?.();
-
         if (page.data.user) {
-          console.log({
-            user: page.data.user.id,
-            multiplication: sums.bitmask,
-            questions: sums.items.length,
-            correct: sums.items.filter((sum) => sum.answered === true).length,
-            time: sums.elapsedTime
+          const response = await fetch('/api/multiplication', {
+            headers: { 'Content-Type': 'application/json' },
+            method: 'POST',
+            body: JSON.stringify({
+              multiplication: sums.bitmask,
+              questions: sums.items.length,
+              correct: sums.items.filter((s) => s.answered === true).length,
+              time: sums.elapsedTime
+            })
           });
+          const result = await response.json();
+          toasts.show({ type: result.success ? 'success' : 'error', content: result.message });
         }
       }
     }
