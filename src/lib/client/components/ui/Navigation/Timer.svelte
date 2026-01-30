@@ -54,7 +54,7 @@
 
 {#if sums.isActive}
   <div class="flex items-center gap-2">
-    <span class="countdown font-sans text-5xl font-light text-orange-500">
+    <span class="countdown font-sans text-5xl font-semibold text-orange-500">
       <span
         style="--value:{minutes}; --digits:2;"
         aria-live="polite"
