@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from '$app/state';
   import { onMount } from 'svelte';
+  import { shortcut, type ShortcutEventDetail } from '@svelte-put/shortcut';
   import { MultiplicationGenerator } from '$lib/services/MultiplicationSumGenerator';
   import { resetSums, sums } from '$lib/client/state/sums.svelte';
 
@@ -36,7 +37,7 @@
     localStorage.setItem('multiplication', String(bitmask));
   }
 
-  function launch() {
+  function onBtnLaunchClicked() {
     const generator = new MultiplicationGenerator(bitmask, questions); // Tables 1 and 3
     sums.items = generator.generate();
     sums.bitmask = bitmask;
@@ -49,7 +50,24 @@
   function cancel() {
     resetSums();
   }
+
+  function onShortcut(detail: ShortcutEventDetail) {
+    detail.originalEvent.preventDefault();
+    if (page.data.user) {
+      onBtnLaunchClicked();
+    }
+  }
 </script>
+
+<svelte:window
+  use:shortcut={{
+    trigger: {
+      key: 'k',
+      modifier: ['ctrl', 'meta'],
+      callback: onShortcut
+    }
+  }}
+/>
 
 <div class="flex items-center gap-1">
   <button
@@ -94,9 +112,9 @@
     />
     <button
       class="btn join-item btn-accent"
-      title="launch"
+      title="launch ⌘K"
       disabled={selected.length === 0 || !page.data.user}
-      onclick={launch}
+      onclick={onBtnLaunchClicked}
     >
       <span class="icon-[carbon--rocket]"></span>
     </button>
