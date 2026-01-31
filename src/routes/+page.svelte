@@ -40,11 +40,13 @@
           });
           const result = await response.json();
           if (result.success) {
+            let best: boolean = false;
             if (!page.data.best) {
               page.data.best = {
                 time: sums.elapsedTime,
                 correct: correct
               };
+              best = true;
             } else {
               if (correct >= page.data.best.correct) {
                 if (
@@ -53,14 +55,17 @@
                 ) {
                   page.data.best.time = sums.elapsedTime;
                   page.data.best.correct = correct;
-                  toasts.show({
-                    type: 'success',
-                    content: `New Best Time! Well Done ${page.data.user.username}!`
-                  });
-                  await invalidateAll();
-                  await confetti.addConfetti();
+                  best = true;
                 }
               }
+            }
+            if (best) {
+              toasts.show({
+                type: 'success',
+                content: `New Best Time! Well Done ${page.data.user.username}!`
+              });
+              await invalidateAll();
+              await confetti.addConfetti();
             }
           } else {
             toasts.error(result.message);
