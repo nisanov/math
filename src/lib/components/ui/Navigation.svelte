@@ -6,7 +6,7 @@
 </script>
 
 <div class="navbar flex items-center justify-between gap-x-2 bg-base-100 shadow-sm">
-  <div class="flex items-center gap-x-4">
+  <div class="flex items-center gap-x-5">
     <Theme />
     <Multiplication />
   </div>
