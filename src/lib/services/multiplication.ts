@@ -1,11 +1,11 @@
-export interface MultiplicationSum {
+export interface Multiplication {
   multiplicand: number;
   multiplier: number;
   answer: number;
   answered: boolean | null;
 }
 
-export class MultiplicationGenerator {
+export class MultiplicationService {
   private readonly tables: number[] = [];
   private readonly questions: number;
 
@@ -14,12 +14,12 @@ export class MultiplicationGenerator {
     this.questions = questions;
   }
 
-  generate(): MultiplicationSum[] {
+  generate(): Multiplication[] {
     if (this.tables.length === 0) {
       return [];
     }
 
-    const sums: MultiplicationSum[] = [];
+    const sums: Multiplication[] = [];
 
     for (let i = 0; i < this.questions; i++) {
       const multiplicand = this.tables[Math.floor(Math.random() * this.tables.length)];

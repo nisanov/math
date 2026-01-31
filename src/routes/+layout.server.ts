@@ -1,12 +1,13 @@
 import { loadFlash } from 'sveltekit-flash-message/server';
 import { superValidate } from 'sveltekit-superforms';
 import { valibot } from 'sveltekit-superforms/adapters';
-import { LoginSchema, LogoutSchema } from '$lib/schemas';
+import { LoginSchema, LogoutSchema } from '$lib/schemas/validation';
 import type { LayoutServerLoad } from './$types';
+import { CookieService } from '$lib/services/cookies';
 
 export const load: LayoutServerLoad = loadFlash(async ({ cookies }) => {
   return {
-    user: cookies.get('user') ? JSON.parse(cookies.get('user') || '{}') : undefined,
+    user: new CookieService(cookies).getUser(),
     form: {
       login: await superValidate(valibot(LoginSchema)),
       logout: await superValidate(valibot(LogoutSchema))

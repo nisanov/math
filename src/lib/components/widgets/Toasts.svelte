@@ -1,6 +1,6 @@
 <script>
   import { fade } from 'svelte/transition';
-  import { toasts } from '$lib/client/state/toasts.svelte';
+  import { toasts } from '$lib/state/toasts.svelte.ts';
 </script>
 
 <div class="toast toast-center toast-bottom w-80">

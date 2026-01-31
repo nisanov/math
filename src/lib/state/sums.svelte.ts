@@ -1,8 +1,8 @@
-import type { MultiplicationSum } from '$lib/services/MultiplicationSumGenerator';
+import type { Multiplication } from '$lib/services/multiplication';
 
 export const sums = $state<{
-  items: MultiplicationSum[];
-  bitmask: number;
+  items: Multiplication[];
+  sequence: number;
   questions: number;
   elapsedTime: string;
   isActive: boolean;
@@ -12,7 +12,7 @@ export const sums = $state<{
   onReset: (() => void) | null;
 }>({
   items: [],
-  bitmask: 0,
+  sequence: 0,
   questions: 5,
   elapsedTime: '00:00:00',
   isActive: false,
@@ -24,7 +24,7 @@ export const sums = $state<{
 
 export function resetSums() {
   sums.items = [];
-  sums.bitmask = 0;
+  sums.sequence = 0;
   sums.elapsedTime = '00:00:00';
   sums.isActive = false;
   sums.onReset?.();

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { sums } from '$lib/client/state/sums.svelte';
+  import { sums } from '$lib/state/sums.svelte.js';
 
   let hours = $state(0);
   let minutes = $state(0);

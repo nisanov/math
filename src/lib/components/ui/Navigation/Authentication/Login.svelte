@@ -3,9 +3,9 @@
   import { superForm } from 'sveltekit-superforms';
   import { shortcut, type ShortcutEventDetail } from '@svelte-put/shortcut';
   import { page } from '$app/state';
-  import { LoginSchema } from '$lib/schemas';
+  import { LoginSchema } from '$lib/schemas/validation';
   import { valibotClient } from 'sveltekit-superforms/adapters';
-  import { toasts } from '$lib/client/state/toasts.svelte';
+  import { toasts } from '$lib/state/toasts.svelte.js';
 
   const { form, errors, enhance } = superForm(page.data.form.login, {
     validators: valibotClient(LoginSchema),

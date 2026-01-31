@@ -1,8 +1,8 @@
 <script lang="ts">
   import { page } from '$app/state';
-  import { sums } from '$lib/client/state/sums.svelte';
+  import { sums } from '$lib/state/sums.svelte';
   import { onMount } from 'svelte';
-  import { toasts } from '$lib/client/state/toasts.svelte';
+  import { toasts } from '$lib/state/toasts.svelte';
 
   let answers = $state<string[]>([]);
   let inputs = $state<HTMLInputElement[]>([]);
@@ -25,7 +25,7 @@
             headers: { 'Content-Type': 'application/json' },
             method: 'POST',
             body: JSON.stringify({
-              multiplication: sums.bitmask,
+              sequence: sums.sequence,
               questions: sums.items.length,
               correct: sums.items.filter((s) => s.answered === true).length,
               time: sums.elapsedTime

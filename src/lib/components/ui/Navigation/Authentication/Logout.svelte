@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from '$app/state';
   import { superForm } from 'sveltekit-superforms';
-  import { resetSums } from '$lib/client/state/sums.svelte';
+  import { resetSums } from '$lib/state/sums.svelte.js';
 
   const { enhance } = superForm(page.data.form.logout, {
     onResult: () => {

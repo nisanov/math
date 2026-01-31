@@ -1,11 +1,11 @@
 import { fail } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import type { Actions } from './$types';
-import { LoginSchema } from '$lib/schemas';
+import { LoginSchema } from '$lib/schemas/validation';
 import { superValidate } from 'sveltekit-superforms';
 import { valibot } from 'sveltekit-superforms/adapters';
-import { db } from '$lib/server/db';
-import { user } from '$lib/server/db/schema';
+import { db } from '$lib/schemas/database';
+import { user } from '$lib/schemas/database/schema';
 import { setFlash } from 'sveltekit-flash-message/server';
 
 export const actions = {

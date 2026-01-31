@@ -1,12 +1,12 @@
 <script lang="ts">
   import './layout.css';
   import favicon from '$lib/assets/favicon.svg';
-  import Toasts from '$lib/client/components/widgets/Toasts.svelte';
+  import Toasts from '$lib/components/widgets/Toasts.svelte';
   import { page } from '$app/state';
   import type { LayoutProps } from './$types';
-  import Navigation from '$lib/client/components/ui/Navigation.svelte';
+  import Navigation from '$lib/components/ui/Navigation.svelte';
   import { getFlash } from 'sveltekit-flash-message';
-  import { toasts } from '$lib/client/state/toasts.svelte';
+  import { toasts } from '$lib/state/toasts.svelte';
 
   let { children }: LayoutProps = $props();
 

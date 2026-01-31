@@ -1,27 +1,22 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import { invalidateAll } from '$app/navigation';
   import { onMount } from 'svelte';
   import { shortcut, type ShortcutEventDetail } from '@svelte-put/shortcut';
-  import { MultiplicationGenerator } from '$lib/services/MultiplicationSumGenerator';
-  import { resetSums, sums } from '$lib/client/state/sums.svelte';
+  import { MultiplicationService } from '$lib/services/multiplication';
+  import { resetSums, sums } from '$lib/state/sums.svelte.js';
 
   let selected = $state<number[]>([]);
-  let bitmask = $state(0);
-  let questions = $state(5);
+  let sequence = $state(page.data.sequence);
+  let questions = $state(page.data.questions);
 
   onMount(() => {
-    const storedQuestions = localStorage.getItem('questions');
-    if (storedQuestions) {
-      questions = parseInt(storedQuestions, 10);
-    }
-    const storedMultiplication = localStorage.getItem('multiplication');
-    if (storedMultiplication) {
-      bitmask = parseInt(storedMultiplication, 10);
-      selected = Array.from({ length: 12 }, (_, i) => 1 << i).filter((val) => bitmask & val);
+    if (sequence) {
+      selected = Array.from({ length: 12 }, (_, i) => 1 << i).filter((val) => sequence & val);
     }
   });
 
-  function validateQuestions() {
+  async function onQuestionsChanged() {
     if (isNaN(questions) || questions < 5) {
       questions = 5;
     } else if (questions > 20) {
@@ -29,18 +24,32 @@
     } else {
       questions = Math.round(questions / 5) * 5;
     }
-    localStorage.setItem('questions', String(questions));
+
+    await fetch('/api/questions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ questions })
+    });
+
+    await invalidateAll();
   }
 
-  function onTimesTableChanged() {
-    bitmask = selected.reduce((acc, val) => acc | val, 0);
-    localStorage.setItem('multiplication', String(bitmask));
+  async function onTimesTableChanged() {
+    sequence = selected.reduce((acc, val) => acc | val, 0);
+
+    await fetch('/api/sequence', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sequence })
+    });
+
+    await invalidateAll();
   }
 
   function onBtnLaunchClicked() {
-    const generator = new MultiplicationGenerator(bitmask, questions); // Tables 1 and 3
+    const generator = new MultiplicationService(sequence, questions);
     sums.items = generator.generate();
-    sums.bitmask = bitmask;
+    sums.sequence = sequence;
     sums.questions = questions;
     sums.isActive = true;
     sums.onLaunch?.();
@@ -105,10 +114,9 @@
       step="5"
       min="5"
       max="20"
-      title="Must be between be 5 to 20"
+      title="Must be between 5 to 20 questions"
       bind:value={questions}
-      onblur={validateQuestions}
-      onchange={() => localStorage.setItem('questions', String(questions))}
+      onchange={onQuestionsChanged}
     />
     <button
       class="btn join-item btn-accent"
@@ -119,4 +127,10 @@
       <span class="icon-[carbon--rocket]"></span>
     </button>
   </div>
+  {#if page.data.best}
+    <div>
+      {page.data.best.time}
+      {page.data.best.correct} / {page.data.best.questions}
+    </div>
+  {/if}
 </div>
