@@ -2,7 +2,7 @@ import type { PageServerLoad } from './$types';
 import { CookieService, type User } from '$lib/services/cookies';
 import { multiplication } from '$lib/schemas/database/schema';
 import { db } from '$lib/schemas/database';
-import { and, desc, eq } from 'drizzle-orm';
+import { and, asc, desc, eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ cookies }) => {
   const cookie: CookieService = new CookieService(cookies);
@@ -22,7 +22,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
           eq(multiplication.sequence, sequence)
         )
       )
-      .orderBy(desc(multiplication.correct))
+      .orderBy(desc(multiplication.correct), asc(multiplication.time))
       .limit(1);
 
     best = best[0];

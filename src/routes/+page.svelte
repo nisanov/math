@@ -1,13 +1,19 @@
 <script lang="ts">
-  import { page } from '$app/state';
-  import { sums } from '$lib/state/sums.svelte';
   import { onMount } from 'svelte';
+  import { page } from '$app/state';
+  import { invalidateAll } from '$app/navigation';
+  import { sums } from '$lib/state/sums.svelte';
   import { toasts } from '$lib/state/toasts.svelte';
+  import { TimeService } from '$lib/services/time';
+  import JSConfetti from 'js-confetti';
 
+  let confetti: JSConfetti;
   let answers = $state<string[]>([]);
   let inputs = $state<HTMLInputElement[]>([]);
 
   onMount(() => {
+    confetti = new JSConfetti();
+
     sums.onLaunch = () => {
       answers = sums.items.map(() => '');
       setTimeout(() => inputs[0]?.focus(), 0);
@@ -21,18 +27,44 @@
       if (sums.items.every((sum) => sum.answered !== null)) {
         sums.onTimerStop?.();
         if (page.data.user) {
+          const correct = sums.items.filter((s) => s.answered === true).length;
           const response = await fetch('/api/multiplication', {
             headers: { 'Content-Type': 'application/json' },
             method: 'POST',
             body: JSON.stringify({
               sequence: sums.sequence,
               questions: sums.items.length,
-              correct: sums.items.filter((s) => s.answered === true).length,
+              correct: correct,
               time: sums.elapsedTime
             })
           });
           const result = await response.json();
-          toasts.show({ type: result.success ? 'success' : 'error', content: result.message });
+          if (result.success) {
+            if (!page.data.best) {
+              page.data.best = {
+                time: sums.elapsedTime,
+                correct: correct
+              };
+            } else {
+              if (correct >= page.data.best.correct) {
+                if (
+                  TimeService.toSeconds(sums.elapsedTime) <
+                  TimeService.toSeconds(page.data.best.time)
+                ) {
+                  page.data.best.time = sums.elapsedTime;
+                  page.data.best.correct = correct;
+                  toasts.show({
+                    type: 'success',
+                    content: `New Best Time! Well Done ${page.data.user.username}!`
+                  });
+                  await invalidateAll();
+                  await confetti.addConfetti();
+                }
+              }
+            }
+          } else {
+            toasts.error(result.message);
+          }
         }
       }
     }

@@ -9,6 +9,9 @@
   let selected = $state<number[]>([]);
   let sequence = $state(page.data.sequence);
   let questions = $state(page.data.questions);
+  let percentage = $derived(
+    page.data.best ? Math.ceil((page.data.best.correct / page.data.best.questions) * 100) : 0
+  );
 
   onMount(() => {
     if (sequence) {
@@ -128,9 +131,10 @@
     </button>
   </div>
   {#if page.data.best}
-    <div>
-      {page.data.best.time}
-      {page.data.best.correct} / {page.data.best.questions}
+    <div class="ml-2 badge badge-soft badge-xl badge-info">
+      <span class="icon-[raphael--stopwatch]" style="width: 20px; height: 20px;"></span>
+      {page.data.best.time.substring(3)}
     </div>
+    <div class="badge badge-soft badge-xl badge-info">{percentage}%</div>
   {/if}
 </div>
