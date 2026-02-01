@@ -1,11 +1,14 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { sums } from '$lib/state/sums.svelte.js';
+  import { fade } from 'svelte/transition';
+  import { Sums, sums } from '$lib/state/sums.svelte.js';
 
   let hours = $state(0);
   let minutes = $state(0);
   let seconds = $state(0);
   let intervalId: ReturnType<typeof setInterval> | null = null;
+  let score = $derived.by(() => Sums.percentage());
+  let completed = $derived.by(() => Sums.completed());
 
   function startTimer() {
     if (intervalId) clearInterval(intervalId);
@@ -53,7 +56,16 @@
 </script>
 
 {#if sums.isActive}
-  <div class="flex items-center gap-2">
+  <div transition:fade class="flex items-center gap-2">
+    {#if completed}
+      <div
+        class="badge badge-soft badge-xl badge-info {score === 100
+          ? 'badge-success'
+          : 'badge-warning'}"
+      >
+        {score}%
+      </div>
+    {/if}
     <span class="countdown font-sans text-5xl font-semibold text-orange-500">
       <span
         style="--value:{minutes}; --digits:2;"

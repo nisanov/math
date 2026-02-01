@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { page } from '$app/state';
   import { invalidateAll } from '$app/navigation';
-  import { sums } from '$lib/state/sums.svelte';
+  import { Sums, sums } from '$lib/state/sums.svelte';
   import { toasts } from '$lib/state/toasts.svelte';
   import { TimeService } from '$lib/services/time';
   import JSConfetti from 'js-confetti';
@@ -24,17 +24,17 @@
     if (answers[index].toString().trim() !== '') {
       sums.items[index].answered =
         answers[index].toString() === sums.items[index].answer.toString();
-      if (sums.items.every((sum) => sum.answered !== null)) {
+      if (Sums.completed()) {
         sums.onTimerStop?.();
         if (page.data.user) {
-          const correct = sums.items.filter((s) => s.answered === true).length;
+          const correct = Sums.correct();
           const response = await fetch('/api/multiplication', {
             headers: { 'Content-Type': 'application/json' },
             method: 'POST',
             body: JSON.stringify({
               sequence: sums.sequence,
               questions: sums.items.length,
-              correct: correct,
+              correct,
               time: sums.elapsedTime
             })
           });
@@ -44,7 +44,7 @@
             if (!page.data.best) {
               page.data.best = {
                 time: sums.elapsedTime,
-                correct: correct
+                correct
               };
               best = true;
             } else {

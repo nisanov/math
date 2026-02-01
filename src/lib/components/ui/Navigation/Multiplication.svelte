@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from '$app/state';
   import { invalidateAll } from '$app/navigation';
+  import { fade } from 'svelte/transition';
   import { onMount } from 'svelte';
   import { shortcut, type ShortcutEventDetail } from '@svelte-put/shortcut';
   import { MultiplicationService } from '$lib/services/multiplication';
@@ -129,10 +130,10 @@
     </button>
   </div>
   {#if page.data.best}
-    <div class="ml-2 badge badge-soft badge-xl badge-info">
+    <div transition:fade class="ml-2 badge badge-soft badge-xl badge-info">
       <span class="icon-[raphael--stopwatch]" style="width: 20px; height: 20px;"></span>
       {page.data.best.time.substring(3)}
     </div>
-    <div class="badge badge-soft badge-xl badge-info">{percentage}%</div>
+    <div transition:fade class="badge badge-soft badge-xl badge-info">{percentage}%</div>
   {/if}
 </div>

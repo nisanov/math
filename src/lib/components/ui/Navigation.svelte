@@ -10,6 +10,8 @@
     <Theme />
     <Multiplication />
   </div>
-  <Timer />
-  <Authentication />
+  <div class="flex items-center gap-x-5">
+    <Timer />
+    <Authentication />
+  </div>
 </div>

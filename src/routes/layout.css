@@ -14,3 +14,4 @@
 
 @source inline('btn-{info,success,warning,error}');
 @source inline('alert-{info,success,warning,error}');
+@source inline('badge-{info,success,warning,error}');
