@@ -1,19 +1,25 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { page } from '$app/state';
 
-  let dark = $state(false);
+  let dark = $state(page.data.dark);
 
-  onMount(() => {
-    dark = localStorage.getItem('dark') === 'true';
-  });
-
-  $effect(() => {
-    localStorage.setItem('dark', dark.toString());
-  });
+  async function onDarkModeChange() {
+    await fetch('/api/dark', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dark })
+    });
+  }
 </script>
 
 <label class="swap swap-rotate">
-  <input type="checkbox" class="theme-controller" value="dark" bind:checked={dark} />
+  <input
+    type="checkbox"
+    class="theme-controller"
+    value="dark"
+    bind:checked={dark}
+    onchange={onDarkModeChange}
+  />
   <svg
     class="swap-off h-10 w-10 fill-current"
     xmlns="http://www.w3.org/2000/svg"

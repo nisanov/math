@@ -2,6 +2,12 @@
 
 Simple application to practice mathematics.
 
+## Feature Requests
+
+1. Show the score percentage next to the time when the game is finished, red for below 100% green for 100%.
+2. Show the wrong answers in a badge.
+3. Submit answers with the return key.
+
 ## Production
 
 ```shell

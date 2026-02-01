@@ -6,8 +6,10 @@ import type { LayoutServerLoad } from './$types';
 import { CookieService } from '$lib/services/cookies';
 
 export const load: LayoutServerLoad = loadFlash(async ({ cookies }) => {
+  const cookie = new CookieService(cookies);
   return {
-    user: new CookieService(cookies).getUser(),
+    user: cookie.getUser(),
+    dark: cookie.isDarkMode(),
     form: {
       login: await superValidate(valibot(LoginSchema)),
       logout: await superValidate(valibot(LogoutSchema))

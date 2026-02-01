@@ -77,7 +77,7 @@
 </script>
 
 {#if sums.items.length > 0 && page.data.user}
-  <div class="m-10 grid grid-cols-5 gap-10">
+  <div class="m-10 grid grid-cols-5 gap-8">
     {#each sums.items as sum, i (i)}
       <div class="flex items-center justify-between gap-2">
         <span class="w-6 text-right text-sm opacity-60">{i + 1}.</span>

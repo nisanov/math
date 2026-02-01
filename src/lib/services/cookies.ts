@@ -28,6 +28,18 @@ export class CookieService {
     return undefined;
   }
 
+  public isDarkMode(darkMode?: boolean): boolean {
+    if (darkMode === undefined) {
+      const theme = this.cookie.get('theme');
+
+      return theme ? theme === 'true' : false;
+    }
+
+    this.cookie.set('theme', String(darkMode), this.options);
+
+    return darkMode;
+  }
+
   public setQuestions(questions: number): void {
     this.cookie.set('questions', String(questions), this.options);
   }

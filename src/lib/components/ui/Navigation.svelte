@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Theme from '$lib/components/widgets/Theme.svelte';
+  import Theme from '$lib/components/ui/Navigation/Theme.svelte';
   import Authentication from '$lib/components/ui/Navigation/Authentication.svelte';
   import Multiplication from '$lib/components/ui/Navigation/Multiplication.svelte';
   import Timer from '$lib/components/ui/Navigation/Timer.svelte';
