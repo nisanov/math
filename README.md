@@ -2,6 +2,15 @@
 
 Simple application to practice mathematics.
 
+## Production
+
+```shell
+npm ci
+npm run build
+
+pm2 start ecosystem.config.cjs
+```
+
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
