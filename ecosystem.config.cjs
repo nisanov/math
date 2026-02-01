@@ -6,7 +6,7 @@ module.exports = {
       instances: 4,
       exec_mode: 'cluster',
       node_args: '--env-file=.env',
-      interpreter: '~/.nvm/versions/node/v24.13.0/bin/node',
+      interpreter: '/home/yasha/.nvm/versions/node/v24.13.0/bin/node',
       env: {
         HOST: '0.0.0.0',
         PORT: '4000'
@@ -20,7 +20,7 @@ module.exports = {
       ref: 'origin/main',
       repo: 'git@github.com:nisanov/math.git',
       path: '/var/www/math.alienware.one',
-      'post-deploy': 'npm ci && npm run build && pm2 reload ecosystem.config.cjs'
+      'post-deploy': 'nvm use --lts && npm ci && npm run build && pm2 reload ecosystem.config.cjs'
     }
   }
 };
