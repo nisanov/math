@@ -13,7 +13,7 @@ export const sums = $state<{
 }>({
   items: [],
   sequence: 0,
-  questions: 5,
+  questions: 10,
   elapsedTime: '00:00:00',
   isActive: false,
   onLaunch: null,
