@@ -19,18 +19,28 @@ export class MultiplicationService {
       return [];
     }
 
+    const pool: Multiplication[] = [];
+    for (const multiplicand of this.tables) {
+      for (let multiplier = 1; multiplier <= 12; multiplier++) {
+        pool.push({
+          multiplicand,
+          multiplier,
+          answer: multiplicand * multiplier,
+          answered: null
+        });
+      }
+    }
+
+    // Fisher–Yates shuffle
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+
     const sums: Multiplication[] = [];
-
     for (let i = 0; i < this.questions; i++) {
-      const multiplicand = this.tables[Math.floor(Math.random() * this.tables.length)];
-      const multiplier = Math.floor(Math.random() * 12) + 1;
-
-      sums.push({
-        multiplicand,
-        multiplier,
-        answer: multiplicand * multiplier,
-        answered: null
-      });
+      const pick = pool[i % pool.length];
+      sums.push({ ...pick });
     }
 
     return sums;
