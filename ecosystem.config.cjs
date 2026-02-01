@@ -6,6 +6,7 @@ module.exports = {
       instances: 4,
       exec_mode: 'cluster',
       node_args: '--env-file=.env',
+      interpreter: '~/.nvm/versions/node/v24.13.0/bin/node',
       env: {
         HOST: '0.0.0.0',
         PORT: '4000'
