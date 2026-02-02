@@ -83,14 +83,21 @@
         <span class="w-6 text-right text-sm opacity-60">{i + 1}.</span>
         <span>{sum.multiplicand} × {sum.multiplier} = </span>
         <div class="flex items-center gap-2">
-          <input
-            type="number"
-            class="input-bordered input w-20"
-            disabled={sum.answered !== null}
-            bind:value={answers[i]}
-            bind:this={inputs[i]}
-            onblur={() => compute(i)}
-          />
+          <div class="indicator">
+            {#if sum.answered === false}
+              <span class="indicator-item indicator-middle indicator-start badge badge-soft badge-error text-xl">
+                {sum.answer}
+              </span>
+            {/if}
+            <input
+              type="number"
+              class="input-bordered input w-20"
+              disabled={sum.answered !== null}
+              bind:value={answers[i]}
+              bind:this={inputs[i]}
+              onblur={() => compute(i)}
+            />
+          </div>
           {#if sum.answered === true}
             <span class="icon-[mdi-light--check-circle] text-green-500 opacity-50"></span>
           {:else if sum.answered === false}

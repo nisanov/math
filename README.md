@@ -4,8 +4,7 @@ Simple application to practice mathematics.
 
 ## Feature Requests
 
-1. Show the wrong answers in a badge.
-2. Submit answers with the return key.
+1. Submit answers with the return key.
 
 ## Production
 
