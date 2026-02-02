@@ -97,6 +97,17 @@
               disabled={sum.answered !== null}
               bind:value={answers[i]}
               bind:this={inputs[i]}
+              onkeydown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  const next = inputs[i + 1];
+                  if (next) {
+                    next.focus();
+                  } else {
+                    e.currentTarget.blur();
+                  }
+                }
+              }}
               onblur={() => compute(i)}
             />
           </div>

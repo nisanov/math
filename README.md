@@ -4,7 +4,7 @@ Simple application to practice mathematics.
 
 ## Feature Requests
 
-1. Submit answers with the return key.
+1. ...
 
 ## Production
 
