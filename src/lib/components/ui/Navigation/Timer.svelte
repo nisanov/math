@@ -59,9 +59,10 @@
   <div transition:fade class="flex items-center gap-2">
     {#if completed}
       <div
-        class="badge badge-soft badge-xl badge-info {score === 100
-          ? 'badge-success'
-          : 'badge-warning'}"
+        class="badge badge-soft badge-xl"
+        class:badge-success={score >= 100}
+        class:badge-warning={score < 100 && score > 50}
+        class:badge-error={score <= 50}
       >
         {score}%
       </div>

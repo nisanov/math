@@ -85,7 +85,9 @@
         <div class="flex items-center gap-2">
           <div class="indicator">
             {#if sum.answered === false}
-              <span class="indicator-item indicator-middle indicator-start badge badge-soft badge-error text-xl">
+              <span
+                class="indicator-item badge badge-soft text-xl font-semibold indicator-start indicator-middle badge-error"
+              >
                 {sum.answer}
               </span>
             {/if}
