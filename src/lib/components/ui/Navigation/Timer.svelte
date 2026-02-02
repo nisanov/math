@@ -60,8 +60,8 @@
     {#if completed}
       <div
         class="badge badge-soft badge-xl"
-        class:badge-success={score >= 100}
-        class:badge-warning={score < 100 && score > 50}
+        class:badge-success={score >= 90}
+        class:badge-warning={score < 90 && score > 50}
         class:badge-error={score <= 50}
       >
         {score}%
