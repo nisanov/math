@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'app',
       script: './build/index.js',
-      instances: 4,
+      instances: 2,
       exec_mode: 'cluster',
       node_args: '--env-file=.env',
       env: {
