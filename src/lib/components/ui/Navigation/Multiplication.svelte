@@ -91,7 +91,7 @@
   </button>
   <div class="dropdown">
     <div tabindex="0" role="button" class="btn m-1 btn-primary">Multiplication</div>
-    <ul tabindex="-1" class="dropdown-content menu z-1 w-52 rounded-box bg-base-100 p-2 shadow-sm">
+    <ul tabindex="-1" class="dropdown-content menu z-2 w-52 rounded-box bg-base-100 p-2 shadow-sm">
       {#each Array.from({ length: 12 }, (_, i) => i) as i (i)}
         <li>
           <label class="flex justify-between">
