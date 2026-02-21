@@ -23,8 +23,8 @@
   async function onQuestionsChanged() {
     if (isNaN(questions) || questions < 10) {
       questions = 10;
-    } else if (questions > 20) {
-      questions = 20;
+    } else if (questions > 50) {
+      questions = 50;
     }
 
     await fetch('/api/questions', {
@@ -113,10 +113,10 @@
       type="number"
       class="validator input join-item"
       required
-      step="5"
+      step="10"
       min="10"
-      max="20"
-      title="Must be 10, 15 or 20 questions"
+      max="50"
+      title="Must be 10, 20, 30, 40 or 50 questions"
       bind:value={questions}
       onchange={onQuestionsChanged}
     />
