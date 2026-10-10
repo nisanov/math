@@ -1,10 +1,6 @@
 # Mathematics Practice
 
-Simple application to practice mathematics.
-
-## Feature Requests
-
-1. ...
+Simple application to practice times tables.
 
 ## Production
 
